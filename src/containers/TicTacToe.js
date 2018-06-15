@@ -9,12 +9,6 @@ import {
 
 class TicTacToe extends Component {
 
-  constructor(props) {
-    super(props)
-    this.combos = []
-    this.move = this.move.bind(this)
-  }
-
   state = {
     rows: 9,
     gameState: new Array(81).fill(false),
@@ -22,8 +16,6 @@ class TicTacToe extends Component {
     otherMark: 'O',
     gameOver: false,
     yourTurn: true,
-    winner: false,
-    win: false,
     prevMove: false,
     activeBox: false
   }
@@ -65,8 +57,8 @@ class TicTacToe extends Component {
     this.setState( (prevState, props) => {
       return updateGame(index, marker, prevState)
     },() => {
-      let {yourTurn, prevMove, gameState} = this.state
-      if (!yourTurn) {
+      let {yourTurn, prevMove, gameState, gameOver} = this.state
+      if (!yourTurn && !gameOver) {
         this.makeAiMove(prevMove, gameState)
       }
     })
@@ -75,17 +67,7 @@ class TicTacToe extends Component {
   makeAiMove = (prevMove, gameState) => {
     setTimeout(() => {
       this.move(getRandomMove(prevMove,gameState), this.state.otherMark)
-    },1000)
-  }
-
-  winChecker = (gameState) => {
-    let combos = this.combos
-    return combos.find( (combo) => {
-      let [a,b,c] = combo
-      return (gameState[a] === gameState[b]
-        && gameState[a] === gameState[c]
-        && gameState[a])
-    })
+    },10)
   }
 
   render() {

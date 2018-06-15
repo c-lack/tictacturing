@@ -99,6 +99,7 @@ const validMove = (index, prevMove, gameState) => {
   }
 }
 
+// Define winning indices
 const combos = [
   [0,1,2],
   [3,4,5],
@@ -110,6 +111,7 @@ const combos = [
   [2,4,6]
 ]
 
+// Check if any squares are completed
 const completedSquares = (gameState) => {
   [0,1,2,9,10,11,18,19,20].forEach( (idx) => {
     let box = getActiveBox(idx)
@@ -126,6 +128,31 @@ const completedSquares = (gameState) => {
   })
 
   return gameState
+}
+
+// Check if game is over
+const gameOverCheck = (gameState) => {
+  let macroGame = new Array(9).fill(false);
+
+  [0,1,2,9,10,11,18,19,20].forEach( (idx, index) => {
+    let vals = getActiveBox(idx).map( i => gameState[i])
+    let unique = vals.filter((v, i, a) => a.indexOf(v) === i)
+    if (unique.length === 1 && unique[0]) {
+      macroGame[index] = unique[0]
+    }
+  })
+
+  let test = combos.find( (combo) => {
+    let [a,b,c] = combo
+    return (macroGame[a] === macroGame[b]
+      && macroGame[b] === macroGame[c] && macroGame[a])
+  })
+
+  if (test) {
+    return macroGame[test[0]]
+  } else {
+    return false
+  }
 }
 
 // Updates the state of the game
@@ -147,6 +174,9 @@ export const updateGame = (index, marker, prevState) => {
   // Check for completed squares
   gameState = completedSquares(gameState)
 
+  // Check for game over
+  let gameOver = gameOverCheck(gameState)
+
   // Set whether there is an active box or not
   let activeBox = getActiveBox(index)
   let gameBox = activeBox.map(idx => gameState[idx])
@@ -154,5 +184,5 @@ export const updateGame = (index, marker, prevState) => {
     activeBox = false
   }
 
-  return {gameState, yourTurn, activeBox, prevMove: index}
+  return {gameState, yourTurn, activeBox, prevMove: index, gameOver}
 }
