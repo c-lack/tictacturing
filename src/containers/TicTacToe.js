@@ -3,23 +3,16 @@ import {Stage} from 'react-konva'
 import {Board, Squares} from '../styled/TicTacToe'
 
 import {
-  getActiveBox
+  getRandomMove,
+  updateGame,
 } from '../utils/gameLogic'
 
 class TicTacToe extends Component {
 
   constructor(props) {
     super(props)
-    this.combos = [
-      [0,1,2],
-      [3,4,5],
-      [6,7,8],
-      [0,3,6],
-      [1,4,7],
-      [2,5,8],
-      [0,4,8],
-      [2,4,6]
-    ]
+    this.combos = []
+    this.move = this.move.bind(this)
   }
 
   state = {
@@ -31,12 +24,23 @@ class TicTacToe extends Component {
     yourTurn: true,
     winner: false,
     win: false,
-    moves: [],
     prevMove: false,
     activeBox: false
   }
 
   componentWillMount() {
+    this.resize()
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.resize)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize)
+  }
+
+  resize = () => {
     let height = window.innerHeight
     let width = window.innerWidth
     let size = (height < width) ? height * .8 : width * .8
@@ -59,53 +63,19 @@ class TicTacToe extends Component {
 
   move = (index, marker) => {
     this.setState( (prevState, props) => {
-      let {gameState, yourTurn, gameOver, winner, moves, activeBox} = prevState
-      yourTurn = !yourTurn
-      moves.push(index)
-      activeBox=getActiveBox(index)
-      gameState.splice(index, 1, marker)
-      let foundWin = this.winChecker(gameState)
-      if (foundWin) {
-        winner = gameState[foundWin[0]]
-      }
-      if (foundWin || !gameState.includes(false)) {
-        gameOver = true
-      }
-      if (!yourTurn && !gameOver) {
-        this.makeAiMove(gameState)
-      }
-
-      return {
-        gameState,
-        yourTurn,
-        gameOver,
-        win: foundWin || false,
-        winner,
-        moves,
-        prevMove: index,
-        activeBox,
+      return updateGame(index, marker, prevState)
+    },() => {
+      let {yourTurn, prevMove, gameState} = this.state
+      if (!yourTurn) {
+        this.makeAiMove(prevMove, gameState)
       }
     })
   }
 
-  makeAiMove = (gameState) => {
-    let otherMark = this.state.otherMark
-    let openSquares = []
-    gameState.forEach( (square, index) => {
-      if(!square) {
-        openSquares.push(index)
-      }
-    })
-    let aiMove = openSquares[this.random(0, openSquares.length)]
+  makeAiMove = (prevMove, gameState) => {
     setTimeout(() => {
-      this.move(aiMove, otherMark)
+      this.move(getRandomMove(prevMove,gameState), this.state.otherMark)
     },1000)
-  }
-
-  random = (min, max) => {
-    min = Math.ceil(min)
-    max = Math.floor(max)
-    return Math.floor(Math.random() * (max-min)) + min
   }
 
   winChecker = (gameState) => {

@@ -6,7 +6,7 @@ export const Board = ({unit, size, rows, activeBox}) => {
 	let stroke = 'Gainsboro'
   let strokeAlt = 'DarkGrey'
   let strokeActive = 'DimGray'
-	let strokeWidth = 10
+	let strokeWidth = 0.02*size
   // Minor lines
 	for (let i = 1; i < rows; i++) {
     if ((i % 3) === 0) {
@@ -57,8 +57,8 @@ export const Board = ({unit, size, rows, activeBox}) => {
   }
   // Highlight active box
   if (activeBox) {
-    switch (activeBox) {
-      case 1:
+    switch (activeBox[0]) {
+      case 0:
         grid.push(
           <Line
             points={[0,3*unit,3*unit,3*unit]}
@@ -78,7 +78,7 @@ export const Board = ({unit, size, rows, activeBox}) => {
           />
         )
         break
-      case 2:
+      case 3:
         grid.push(
           <Line
             points={[3*unit,3*unit,6*unit,3*unit]}
@@ -107,7 +107,7 @@ export const Board = ({unit, size, rows, activeBox}) => {
           />
         )
         break
-      case 3:
+      case 6:
         grid.push(
           <Line
             points={[6*unit,3*unit,9*unit,3*unit]}
@@ -127,7 +127,7 @@ export const Board = ({unit, size, rows, activeBox}) => {
           />
         )
         break
-      case 4:
+      case 27:
         grid.push(
           <Line
             points={[0,3*unit,3*unit,3*unit]}
@@ -156,7 +156,7 @@ export const Board = ({unit, size, rows, activeBox}) => {
           />
         )
         break
-      case 5:
+      case 30:
         grid.push(
           <Line
             points={[3*unit,3*unit,6*unit,3*unit]}
@@ -194,7 +194,7 @@ export const Board = ({unit, size, rows, activeBox}) => {
           />
         )
         break
-      case 6:
+      case 33:
         grid.push(
           <Line
             points={[6*unit,3*unit,9*unit,3*unit]}
@@ -223,7 +223,7 @@ export const Board = ({unit, size, rows, activeBox}) => {
           />
         )
         break
-      case 7:
+      case 54:
         grid.push(
           <Line
             points={[0,6*unit,3*unit,6*unit]}
@@ -243,7 +243,7 @@ export const Board = ({unit, size, rows, activeBox}) => {
           />
         )
         break
-      case 8:
+      case 57:
         grid.push(
           <Line
             points={[3*unit,6*unit,3*unit,9*unit]}
@@ -272,7 +272,7 @@ export const Board = ({unit, size, rows, activeBox}) => {
           />
         )
         break
-      case 9:
+      case 60:
         grid.push(
           <Line
             points={[6*unit,6*unit,9*unit,6*unit]}
