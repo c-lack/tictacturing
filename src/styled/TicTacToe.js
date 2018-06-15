@@ -320,11 +320,8 @@ export const Squares = ({
       let mark = gameState[index]
       let fill = 'DarkGrey'
       let altFill = 'DimGray'
-      if (win && win.includes(index)) {
-        fill = 'lightgreen'
-      }
       if (gameOver || !yourTurn || mark) {
-        makeMove = () => console.log('nope!');
+        makeMove = () => {}
       }
       return (
         <Text
