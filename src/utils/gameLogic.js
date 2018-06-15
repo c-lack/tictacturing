@@ -151,7 +151,11 @@ const gameOverCheck = (gameState) => {
   if (test) {
     return macroGame[test[0]]
   } else {
-    return false
+    if (!gameState.includes(false)) {
+      return 'No one'
+    } else {
+      return false
+    }
   }
 }
 
