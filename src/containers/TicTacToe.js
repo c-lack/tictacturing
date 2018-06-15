@@ -2,6 +2,10 @@ import React, {Component} from 'react'
 import {Stage} from 'react-konva'
 import {Board, Squares} from '../styled/TicTacToe'
 
+import {
+  getActiveBox
+} from '../utils/gameLogic'
+
 class TicTacToe extends Component {
 
   constructor(props) {
@@ -19,14 +23,17 @@ class TicTacToe extends Component {
   }
 
   state = {
-    rows: 3,
-    gameState: new Array(9).fill(false),
+    rows: 9,
+    gameState: new Array(81).fill(false),
     ownMark: 'X',
     otherMark: 'O',
     gameOver: false,
     yourTurn: true,
     winner: false,
-    win: false
+    win: false,
+    moves: [],
+    prevMove: false,
+    activeBox: false
   }
 
   componentWillMount() {
@@ -52,8 +59,10 @@ class TicTacToe extends Component {
 
   move = (index, marker) => {
     this.setState( (prevState, props) => {
-      let {gameState, yourTurn, gameOver, winner} = prevState
+      let {gameState, yourTurn, gameOver, winner, moves, activeBox} = prevState
       yourTurn = !yourTurn
+      moves.push(index)
+      activeBox=getActiveBox(index)
       gameState.splice(index, 1, marker)
       let foundWin = this.winChecker(gameState)
       if (foundWin) {
@@ -71,7 +80,10 @@ class TicTacToe extends Component {
         yourTurn,
         gameOver,
         win: foundWin || false,
-        winner
+        winner,
+        moves,
+        prevMove: index,
+        activeBox,
       }
     })
   }
@@ -106,14 +118,6 @@ class TicTacToe extends Component {
     })
   }
 
-  turingTest = () => {
-
-  }
-
-  recordGame = () => {
-
-  }
-
   render() {
     let {
       size,
@@ -124,7 +128,9 @@ class TicTacToe extends Component {
       win,
       gameOver,
       yourTurn,
-      ownMark
+      ownMark,
+      prevMove,
+      activeBox
     } = this.state
     return (
       <div>
@@ -136,6 +142,7 @@ class TicTacToe extends Component {
             unit={unit}
             rows={rows}
             size={size}
+            activeBox={activeBox}
           />
           <Squares
             unit={unit}
@@ -146,6 +153,7 @@ class TicTacToe extends Component {
             yourTurn={yourTurn}
             ownMark={ownMark}
             move={this.move}
+            prevMove={prevMove}
           />
         </Stage>
       </div>
