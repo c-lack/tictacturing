@@ -164,9 +164,9 @@ export const updateGame = (index, marker, prevState) => {
   // Unpack prevState
   let { gameState, prevMove, yourTurn } = prevState
 
-  // If move is not valid, do nothing
+  // If move is not valid, forfeit game
   if (!validMove(index, prevMove, gameState)) {
-    return {}
+    return {gameOver: gameState[prevMove]}
   }
 
   // Update gameState

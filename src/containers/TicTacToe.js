@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {Stage} from 'react-konva'
 import {Board, Squares} from '../styled/TicTacToe'
+import {GameHeader} from '../styled/GameHeader'
 
 import {
   getRandomMove,
@@ -67,7 +68,17 @@ class TicTacToe extends Component {
   makeAiMove = (prevMove, gameState) => {
     setTimeout(() => {
       this.move(getRandomMove(prevMove,gameState), this.state.otherMark)
-    },10)
+    },1000)
+  }
+
+  resetGame = () => {
+    this.setState({
+      gameState: new Array(81).fill(false),
+      gameOver: false,
+      yourTurn: true,
+      prevMove: false,
+      activeBox: false
+    })
   }
 
   render() {
@@ -77,7 +88,6 @@ class TicTacToe extends Component {
       rows,
       coordinates,
       gameState,
-      win,
       gameOver,
       yourTurn,
       ownMark,
@@ -86,6 +96,12 @@ class TicTacToe extends Component {
     } = this.state
     return (
       <div>
+        <GameHeader
+          ownMark={ownMark}
+          yourTurn={yourTurn}
+          gameOver={gameOver}
+          resetGame={this.resetGame.bind(this)}
+        />
         <Stage
           width={size}
           height={size}
@@ -100,7 +116,6 @@ class TicTacToe extends Component {
             unit={unit}
             coordinates={coordinates}
             gameState={gameState}
-            win={win}
             gameOver={gameOver}
             yourTurn={yourTurn}
             ownMark={ownMark}
